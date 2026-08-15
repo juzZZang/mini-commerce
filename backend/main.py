@@ -1,5 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from database import engine, get_db
+
+import models
+from database import engine
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -16,24 +22,7 @@ def read_root():
     return {"message": "Hello, FastAPI!"}
 
 @app.get("/products")
-def get_products():
-    return [
-        {
-            "id": 1,
-            "name": "Classic Sneakers",
-            "price": 89000,
-            "category": "Shoes"
-        },
-        {
-            "id": 2,
-            "name": "Minimal Hoodie",
-            "price": 59000,
-            "category": "Fashion"
-        },
-        {
-            "id": 3,
-            "name": "Daily Backpack",
-            "price": 49000,
-            "category": "Accessories"
-        }
-    ]
+def get_products(db = Depends(get_db)):
+    products = db.query(models.Product).all()
+    
+    return products
