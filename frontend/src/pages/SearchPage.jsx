@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function SearchPage() {
     const [searchText, setSearchText] = useState("");
@@ -6,12 +6,12 @@ function SearchPage() {
 
     const categories = ["All", "Fashion", "Shoes", "Accessories", "Electronics"];
 
-    const products = [
-        { id: 1, name: "Classic Sneakers", price: "89000원", category: "Shoes"},
-        { id: 2, name: "Minimal Hoodie", price: "59000원", category: "Fashion"},
-        { id: 3, name: "Daily Backpack", price: "49000원", category: "Accessories"},
-        { id: 4, name: "Smart Watch", price: "129000원", category: "Electronics"},
-    ];
+    const [products, setProducts] = useState([]);
+    useEffect(() => {
+        fetch("http://localhost:8000/products")
+            .then((response) => response.json())
+            .then((data) => setProducts(data))
+    }, []);
 
     const filteredProducts = products.filter((product) => {
         const matchesSearch = product.name
