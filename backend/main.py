@@ -62,3 +62,20 @@ def update_product(
     db.refresh(db_product)
 
     return db_product
+
+@app.delete("/products/{product_id}")
+def delete_product(
+    product_id: int,
+    db = Depends(get_db)
+):
+    db_product = db.query(models.Product).filter(
+        models.Product.id == product_id
+    ).first()
+
+    if db_product is None:
+        return {"message": "상품을 찾을 수 없습니다."}
+
+    db.delete(db_product)
+    db.commit()
+
+    return {"message": "상품이 삭제되었습니다."}
