@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SearchPage() {
+    const navigate = useNavigate();
+
     const [searchText, setSearchText] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -62,10 +65,14 @@ function SearchPage() {
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => (
-                        <div>
+                        <div
+                            key={product.id}
+                            onClick={() => navigate(`/products/${product.id}`)}
+                            className="cursor-pointer rounded-2xl bg-white p-6 shadow-sm"
+                        >
                             <h3 className="text-lg font-semibold">{product.name}</h3>
                             <p className="mt-1 text-sm text-gray-500">{product.category}</p>
-                            <p className="mt-2 text-gray-600">{product.price}</p>
+                            <p className="mt-2 text-gray-600">{product.price}원</p>
                         </div>
                     ))
                 ) : (
