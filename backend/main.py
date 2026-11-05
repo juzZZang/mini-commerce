@@ -79,3 +79,17 @@ def delete_product(
     db.commit()
 
     return {"message": "상품이 삭제되었습니다."}
+
+@app.get("/products/{product_id}")
+def get_product(
+    product_id: int,
+    db = Depends(get_db)
+):
+    db_product = db.query(models.Product).filter(
+        models.Product.id == product_id
+    ).first()
+
+    if db_product is None:
+        return {"message": "상품을 찾을 수 없습니다."}
+
+    return db_product
